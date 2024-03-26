@@ -1,0 +1,56 @@
+{
+  "name": "comparison-node",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/comparison-node/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/comparison-node",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/comparison-node/src/main.ts",
+        "tsConfig": "apps/comparison-node/tsconfig.app.json",
+        "assets": ["apps/comparison-node/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "comparison-node:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "comparison-node:build:development"
+        },
+        "production": {
+          "buildTarget": "comparison-node:build:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}

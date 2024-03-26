@@ -1,0 +1,19 @@
+{
+  "name": "product-state",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/product-state/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/product-state",
+        "main": "libs/product-state/src/index.ts",
+        "tsConfig": "libs/product-state/tsconfig.lib.json",
+        "assets": ["libs/product-state/*.md"]
+      }
+    }
+  },
+  "tags": []
+}

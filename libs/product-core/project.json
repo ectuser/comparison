@@ -1,0 +1,19 @@
+{
+  "name": "product-core",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/product-core/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/product-core",
+        "main": "libs/product-core/src/index.ts",
+        "tsConfig": "libs/product-core/tsconfig.lib.json",
+        "assets": ["libs/product-core/*.md"]
+      }
+    }
+  },
+  "tags": []
+}

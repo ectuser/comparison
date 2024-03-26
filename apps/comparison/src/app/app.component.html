@@ -1,0 +1,63 @@
+<h1>Comparison</h1>
+
+<form [formGroup]="form" (ngSubmit)="search()">
+  <mat-form-field>
+    <mat-label>Search</mat-label>
+    <input matInput formControlName="search">
+  </mat-form-field>
+
+  <div>
+    <button mat-flat-button color="primary" type="submit">Submit</button>
+  </div>
+</form>
+
+<br>
+<br>
+
+@if (products()?.length) {
+  <div cdkDropList cdkDropListOrientation="horizontal" class="example-list" style="width: 100%;" (cdkDropListDropped)="drop($event)">
+    @for (item of products(); track 'isin') {
+      <div class="example-box" cdkDrag>
+        {{item.name}}
+
+        <button mat-icon-button color="primary" (click)="removeProduct(item.isin)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    }
+  </div>
+}
+
+<br>
+<br>
+
+@if (products(); as products) {
+  <table style="width: 100%;">
+
+    <thead>
+      @for (item of products; track 'isin') {
+        <th style="padding: 20px;">{{item.name}}</th>
+      }
+    </thead>
+
+    <tbody>
+      <tr>
+        @for (item of products; track 'isin') {
+          <td>{{item.name}}</td>
+        }
+      </tr>
+
+      <tr>
+        @for (item of products; track 'isin') {
+          <td>{{item.isin}}</td>
+        }
+      </tr>
+
+      <tr>
+        @for (item of products; track 'isin') {
+          <td>{{item.cap > 50 ? 'Yes' : 'No'}}</td>
+        }
+      </tr>
+    </tbody>
+  </table>
+}
