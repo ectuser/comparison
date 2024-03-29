@@ -1,1 +1,1 @@
-export * from './lib/container';
+export * from './lib/types';

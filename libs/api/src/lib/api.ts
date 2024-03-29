@@ -1,5 +1,12 @@
-const baseUrl = 'http://localhost:31299';
+import { Product, ProductRepositoryPlugin } from '@product-comparison/product-core';
+import { injectable } from 'inversify';
 
-export async function getProduct(isin: number) {
-  return fetch(baseUrl + '/products/' + isin);
+@injectable()
+export class ProductRepository implements ProductRepositoryPlugin {
+  getProduct(isin: number): Promise<Product> {
+    return fetch('http://localhost:31299/products/' + isin).then(res => res.json());
+  }
+  getProducts(isins: string[]): Promise<Product[]> {
+    throw new Error('Method not implemented.');
+  }
 }

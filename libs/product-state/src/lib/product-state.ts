@@ -1,40 +1,40 @@
-import { ProductStatePlugin, Product } from '@product-comparison/product-core';
+import { SelectedProductsRepositoryPlugin } from '@product-comparison/product-core';
+import { injectable } from 'inversify';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
-// refactor to store isins only
+@injectable()
+export class ProductState implements SelectedProductsRepositoryPlugin {
+  private readonly productIsins$ = new BehaviorSubject<number[]>([]);
 
-export class ProductState implements ProductStatePlugin {
-  private readonly products$ = new BehaviorSubject<Product[]>([]);
-
-  getProducts(): Observable<Product[]> {
-    return this.products$.asObservable();
+  getProducts(): Observable<number[]> {
+    return this.productIsins$.asObservable();
   }
 
-  async initializeProducts(products: Product[]): Promise<void> {
-    this.products$.next(products);
+  async initializeProducts(isins: number[]): Promise<void> {
+    this.productIsins$.next(isins);
   }
 
-  async addProduct(product: Product): Promise<void> {
-    const existingProduct = this.products$.value.find(p => p.isin === product.isin);
+  async addProduct(isin: number): Promise<void> {
+    const existingProduct = this.productIsins$.value.find(productIsin => productIsin === isin);
 
     if (existingProduct) {
       throw new Error('Product exists');
     }
 
-    const arr = [...this.products$.value, product];
-    this.products$.next(arr);
+    const arr = [...this.productIsins$.value, isin];
+    this.productIsins$.next(arr);
   }
 
   async removeProduct(isin: number): Promise<void> {
-    const arr = this.products$.value.filter(product => product.isin !== isin);
-    this.products$.next(arr);
+    const arr = this.productIsins$.value.filter(productIsin => productIsin !== isin);
+    this.productIsins$.next(arr);
   }
 
   async reorderProducts(fromIndex: number, toIndex: number): Promise<void> {
-    const newArr = [...this.products$.value];
+    const newArr = [...this.productIsins$.value];
     moveItemInArray(newArr, fromIndex, toIndex);
-    this.products$.next(newArr);
+    this.productIsins$.next(newArr);
   }
 
 }

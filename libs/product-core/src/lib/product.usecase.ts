@@ -1,32 +1,31 @@
-import { Observable } from 'rxjs';
+import { TYPES } from '@product-comparison/container';
 
-import { ProductRepositoryPlugin, ProductStatePlugin } from './plugin';
+import { Observable, switchMap, from, map, forkJoin } from 'rxjs';
+import { injectable, inject } from 'inversify';
+
+import { ProductRepositoryPlugin, SelectedProductsRepositoryPlugin } from './plugin';
 import { Product } from './product.model';
 
+@injectable()
 export class ProductUseCase {
   constructor(
-    private productState: ProductStatePlugin,
-    private productRepository: ProductRepositoryPlugin,
+    @inject(TYPES.SelectedProductsRepositoryPlugin) private selectedProductsRepository: SelectedProductsRepositoryPlugin,
+    @inject(TYPES.ProductRepositoryPlugin) private productRepository: ProductRepositoryPlugin,
   ) {}
 
   getProducts(): Observable<Product[]> {
-    return this.productState.getProducts();
+    return this.selectedProductsRepository.getProducts().pipe(
+      map(productIsins => {
+        return productIsins.map(isin => from(this.productRepository.getProduct(isin)))
+      }),
+      switchMap(reqs => {
+        return forkJoin(reqs);
+      })
+    );
   }
 
-  async initializeProducts(isins: string[]): Promise<Product[]> {
-    let products: Product[];
-
-    try {
-      products = await this.productRepository.getProducts(isins);
-    } catch (error) {
-      // if error 404 throw not found
-
-      throw new Error('Error');
-    }
-
-    await this.productState.initializeProducts(products);
-
-    return products;
+  async getProductsByIsins(isins: number[]): Promise<Product[]> {
+    return await Promise.all(isins.map(isin => this.productRepository.getProduct(isin)));
   }
 
   async addProduct(isin: number): Promise<Product> {
@@ -44,7 +43,7 @@ export class ProductUseCase {
     }
 
     try {
-      await this.productState.addProduct(product);
+      await this.selectedProductsRepository.addProduct(isin);
     } catch (error) {
       console.log(error);
 
@@ -55,10 +54,10 @@ export class ProductUseCase {
   }
 
   async removeProduct(isin: number): Promise<void> {
-    await this.productState.removeProduct(isin);
+    await this.selectedProductsRepository.removeProduct(isin);
   }
 
   async reorderProducts(fromIndex: number, toIndex: number): Promise<void> {
-    await this.productState.reorderProducts(fromIndex, toIndex);
+    await this.selectedProductsRepository.reorderProducts(fromIndex, toIndex);
   }
 }

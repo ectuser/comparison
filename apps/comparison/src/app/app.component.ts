@@ -9,8 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-
-import { Container } from '@product-comparison/container';
+import { Di } from './di';
 
 @Component({
   standalone: true,
@@ -21,10 +20,7 @@ import { Container } from '@product-comparison/container';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-
-  private readonly container = Container.getInstance();
-
-  private readonly useCase = this.container.productUseCase;
+  private readonly useCase = this.di.getUseCase();
 
   public readonly products = toSignal(this.useCase.getProducts());
   public readonly columns = computed(() => this.products()?.map(p => p.isin.toString()));
@@ -33,7 +29,10 @@ export class AppComponent {
     search: new FormControl(''),
   });
 
-  constructor(private snackBar: MatSnackBar) {}
+  constructor(
+    private snackBar: MatSnackBar,
+    private di: Di,
+  ) {}
 
   async search() {
     const text = this.form.controls.search.value;

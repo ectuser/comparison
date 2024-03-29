@@ -1,10 +1,10 @@
 import { Observable } from 'rxjs';
 import { Product } from './product.model';
 
-export interface ProductStatePlugin {
-  getProducts(): Observable<Product[]>;
-  initializeProducts(products: Product[]): Promise<unknown>;
-  addProduct(product: Product): Promise<unknown>;
+export interface SelectedProductsRepositoryPlugin {
+  getProducts(): Observable<number[]>;
+  initializeProducts(isins: number[]): Promise<unknown>;
+  addProduct(isin: number): Promise<unknown>;
   removeProduct(isin: number): Promise<unknown>;
   reorderProducts(fromIndex: number, toIndex: number): Promise<unknown>;
 }
