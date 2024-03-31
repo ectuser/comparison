@@ -1,16 +1,20 @@
-import { Injectable } from '@angular/core';
-import { ProductUseCase } from '@product-comparison/product-core';
+import { InjectionToken, inject } from '@angular/core';
+import { ProductRepository } from '@product-comparison/api';
+import { ProductInteractor } from '@product-comparison/product-core';
+import { ProductRepositoryPlugin } from '@product-comparison/product-core';
 
-import { myContainer } from '../inversify.config';
-import { TYPES } from '@product-comparison/container';
-
-@Injectable({providedIn: 'root'})
-export class Di {
-  private readonly container = myContainer;
-
-  getUseCase(): ProductUseCase {
-    return this.container.get<ProductUseCase>(TYPES.ProductUseCase);
+export const PRODUCT_REPOSITORY = new InjectionToken<ProductRepositoryPlugin>('product-repository', {
+  providedIn: 'root',
+  factory() {
+    return new ProductRepository()
   }
-}
+});
 
+export const PRODUCT_INTERACTOR = new InjectionToken<ProductInteractor>('product-interactor', {
+  providedIn: 'root',
+  factory() {
+    const repository = inject(PRODUCT_REPOSITORY);
 
+    return new ProductInteractor(repository);
+  }
+});

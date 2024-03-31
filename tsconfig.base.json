@@ -16,9 +16,12 @@
     "baseUrl": ".",
     "paths": {
       "@product-comparison/api": ["libs/api/src/index.ts"],
+      "@product-comparison/comparison-state": [
+        "libs/comparison-state/src/index.ts"
+      ],
       "@product-comparison/container": ["libs/container/src/index.ts"],
-      "@product-comparison/product-core": ["libs/product-core/src/index.ts"],
-      "@product-comparison/product-state": ["libs/product-state/src/index.ts"]
+      "@product-comparison/event-bus": ["libs/event-bus/src/index.ts"],
+      "@product-comparison/product-core": ["libs/product-core/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

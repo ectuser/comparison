@@ -1,11 +1,11 @@
 /* eslint-disable */
 export default {
-  displayName: 'product-state',
+  displayName: 'comparison-state',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/libs/product-state',
+  coverageDirectory: '../../coverage/libs/comparison-state',
 };

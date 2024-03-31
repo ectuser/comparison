@@ -1,7 +1,5 @@
 import { Product, ProductRepositoryPlugin } from '@product-comparison/product-core';
-import { injectable } from 'inversify';
 
-@injectable()
 export class ProductRepository implements ProductRepositoryPlugin {
   getProduct(isin: number): Promise<Product> {
     return fetch('http://localhost:31299/products/' + isin).then(res => res.json());

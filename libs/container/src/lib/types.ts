@@ -1,7 +1,7 @@
 const TYPES = {
-  ProductUseCase: Symbol.for('ProductUseCase'),
-  SelectedProductsRepositoryPlugin: Symbol.for('SelectedProductsRepositoryPlugin'),
-  ProductRepositoryPlugin: Symbol.for('ProductRepositoryPlugin')
+  IsinsRepositoryPlugin: Symbol.for('IsinsRepositoryPlugin'),
+  ProductRepositoryPlugin: Symbol.for('ProductRepositoryPlugin'),
+  EventBus: Symbol.for('EventBus'),
 };
 
 export { TYPES };
