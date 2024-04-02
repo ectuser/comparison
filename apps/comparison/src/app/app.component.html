@@ -1,20 +1,11 @@
 <h1>Comparison</h1>
 
-<form [formGroup]="form" (ngSubmit)="search()">
-  <mat-form-field>
-    <mat-label>Search</mat-label>
-    <input matInput formControlName="search">
-  </mat-form-field>
-
-  <div>
-    <button mat-flat-button color="primary" type="submit">Search</button>
-  </div>
-</form>
+<app-search />
 
 <br>
 <br>
 
-@if (products()?.length) {
+@if (products().length) {
   <div cdkDropList cdkDropListOrientation="horizontal" class="example-list" style="width: 100%;" (cdkDropListDropped)="drop($event)">
     @for (item of products(); track 'isin') {
       <div class="example-box" cdkDrag>

@@ -21,7 +21,12 @@
       ],
       "@product-comparison/container": ["libs/container/src/index.ts"],
       "@product-comparison/event-bus": ["libs/event-bus/src/index.ts"],
-      "@product-comparison/product-core": ["libs/product-core/src/index.ts"]
+      "@product-comparison/history-state": ["libs/history-state/src/index.ts"],
+      "@product-comparison/localstorage": ["libs/localstorage/src/index.ts"],
+      "@product-comparison/product-core": ["libs/product-core/src/index.ts"],
+      "@product-comparison/product-history": [
+        "libs/product-history/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

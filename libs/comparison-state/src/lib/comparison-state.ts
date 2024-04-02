@@ -2,52 +2,77 @@ import { Product, ProductInteractor } from '@product-comparison/product-core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export class ComparisonState {
-  readonly products$: Observable<Product[]>;
-
   private readonly products = new BehaviorSubject<Product[]>([]);
+  private readonly loading = new BehaviorSubject<boolean>(false);
 
   constructor(
     private productInteractor: ProductInteractor,
-  ) {
-    this.products$ = this.products.asObservable();
+  ) {}
+
+  getProducts(): Observable<Product[]> {
+    return this.products.asObservable();
+  }
+
+  getIsLoading(): Observable<boolean> {
+    return this.loading.asObservable();
   }
 
   async setProducts(isins: number[]) {
-    const requests = isins.map(isin => {
-      const existingProduct = this.products.value.find(p => p.isin === isin);
+    this.loading.next(true);
 
-      if (existingProduct) {
-        return Promise.resolve(existingProduct)
-      }
+    try {
+      const requests = isins.map(isin => {
+        const existingProduct = this.products.value.find(p => p.isin === isin);
 
-      return this.productInteractor.getProduct(isin);
-    });
-
-    const newProducts = await Promise.allSettled(requests).then(reqs => {
-      return reqs.map(req => {
-        if (req.status === 'fulfilled') {
-          return req.value;
+        if (existingProduct) {
+          return Promise.resolve(existingProduct)
         }
 
-        return null;
-      }).filter(req => !!req)
-    }) as Product[];
+        return this.productInteractor.getProduct(isin);
+      });
 
-    this.products.next(newProducts);
+      const newProducts = await Promise.allSettled(requests).then(reqs => {
+        return reqs.map(req => {
+          if (req.status === 'fulfilled') {
+            return req.value;
+          }
+
+          return null;
+        }).filter(req => !!req)
+      }) as Product[];
+
+      this.products.next(newProducts);
+    } catch (error: any) {
+      const message = 'message' in error ? error?.message : 'error';
+
+      throw new Error(message);
+    } finally {
+      this.loading.next(false);
+    }
   }
 
   async addProduct(isin: number) {
-    const existingProduct = this.products.value.find(p => p.isin === isin);
+    this.loading.next(true);
 
-    if (existingProduct) {
-      throw new Error('Product already exists');
+    try {
+      const existingProduct = this.products.value.find(p => p.isin === isin);
+
+      if (existingProduct) {
+        throw new Error('Product already exists');
+      }
+
+      const product = await this.productInteractor.getProduct(isin);
+
+      this.products.next([...this.products.value, product]);
+
+      return product;
+    } catch (error: any) {
+      const message = error?.message || 'error';
+
+      throw new Error(message);
+    } finally {
+      this.loading.next(false);
     }
-
-    const product = await this.productInteractor.getProduct(isin);
-
-    this.products.next([...this.products.value, product]);
-
-    return product;
   }
 
   async removeProduct(isin: number) {

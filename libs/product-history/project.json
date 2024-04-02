@@ -1,0 +1,19 @@
+{
+  "name": "product-history",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/product-history/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/product-history",
+        "main": "libs/product-history/src/index.ts",
+        "tsConfig": "libs/product-history/tsconfig.lib.json",
+        "assets": ["libs/product-history/*.md"]
+      }
+    }
+  }
+}

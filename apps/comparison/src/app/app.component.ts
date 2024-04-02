@@ -1,35 +1,36 @@
-import { ChangeDetectionStrategy, Component, Inject, InjectionToken, computed } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, Inject, InjectionToken, Signal, computed } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 
 import { ComparisonState } from '@product-comparison/comparison-state';
-import { ProductInteractor } from '@product-comparison/product-core';
+import { Product, ProductInteractor } from '@product-comparison/product-core';
+import { HistoryState } from '@product-comparison/history-state';
 
-import { PRODUCT_INTERACTOR } from './di';
-import { EMPTY, skip, switchMap } from 'rxjs';
+import { HISTORY_INTERACTOR, PRODUCT_INTERACTOR } from './di';
+import { skip, switchMap } from 'rxjs';
+import { ProductHistoryInteractor } from '@product-comparison/product-history';
+import { SearchComponent } from './search/search.component';
+import { MatButtonModule } from '@angular/material/button';
 
-const PRODUCT_STATE = new InjectionToken<ComparisonState>('product-state');
+export const PRODUCT_STATE = new InjectionToken<ComparisonState>('product-state');
+export const HISTORY_STATE = new InjectionToken<HistoryState>('history-state');
 
 @Component({
   standalone: true,
   imports: [
     DragDropModule,
-    MatButtonModule,
-    MatInputModule,
-    ReactiveFormsModule,
     MatSnackBarModule,
     MatTableModule,
+    MatButtonModule,
     MatIconModule,
     RouterModule,
+    SearchComponent,
   ],
   providers: [
     {
@@ -37,6 +38,11 @@ const PRODUCT_STATE = new InjectionToken<ComparisonState>('product-state');
         return new ComparisonState(productInteractor);
       }, deps: [PRODUCT_INTERACTOR],
     },
+    {
+      provide: HISTORY_STATE, useFactory(historyInteractor: ProductHistoryInteractor) {
+        return new HistoryState(historyInteractor);
+      }, deps: [HISTORY_INTERACTOR]
+    }
   ],
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -44,24 +50,24 @@ const PRODUCT_STATE = new InjectionToken<ComparisonState>('product-state');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  public readonly products = toSignal(this.comparisonState.products$);
-  public readonly columns = computed(() => this.products()?.map(p => p.isin.toString()));
-
-  public readonly form = new FormGroup({
-    search: new FormControl(''),
-  });
+  readonly products: Signal<Product[]>;
+  readonly columns: Signal<string[]>;
 
   constructor(
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,
     private router: Router,
     @Inject(PRODUCT_STATE) private comparisonState: ComparisonState,
+    @Inject(HISTORY_STATE) public historyState: HistoryState,
   ) {
-    this.comparisonState.products$.pipe(
+    const products$ = this.comparisonState.getProducts();
+
+    this.products = toSignal(products$, {initialValue: []});
+    this.columns = computed(() => this.products()?.map(p => p.isin.toString()));
+
+    products$.pipe(
       skip(1),
       switchMap(products => {
-        console.log(products);
-
         return this.router.navigate(['.'], {
           queryParams: {
             isins: products.map(p => p.isin),
@@ -89,27 +95,6 @@ export class AppComponent {
       }),
       takeUntilDestroyed(),
     ).subscribe();
-  }
-
-  async search() {
-    const text = this.form.controls.search.value;
-
-    const isin = Number(text);
-
-    if (!text || isNaN(isin)) {
-      this.snackBar.open('Error: incorrect input');
-      return;
-    }
-
-    try {
-      const product = await this.comparisonState.addProduct(isin);
-
-      this.snackBar.open(`Product ${product.name} added to comparison`);
-
-      this.form.controls.search.setValue('', {emitEvent: false});
-    } catch (error) {
-      this.snackBar.open('Error: ' + (error as any).message);
-    }
   }
 
   async removeProduct(isin: number) {
