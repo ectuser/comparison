@@ -1,3 +1,3 @@
-export * from './lib/product.model';
-export * from './lib/product.interactor';
-export * from './lib/plugin';
+export * from './lib/domain/product.model';
+export * from './lib/domain/product.interactor';
+export * from './lib/domain/plugin';
