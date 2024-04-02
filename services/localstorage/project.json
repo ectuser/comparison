@@ -1,7 +1,7 @@
 {
   "name": "localstorage",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/localstorage/src",
+  "sourceRoot": "services/localstorage/src",
   "projectType": "library",
   "tags": [],
   "targets": {
@@ -9,10 +9,10 @@
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/localstorage",
-        "main": "libs/localstorage/src/index.ts",
-        "tsConfig": "libs/localstorage/tsconfig.lib.json",
-        "assets": ["libs/localstorage/*.md"]
+        "outputPath": "dist/services/localstorage",
+        "main": "services/localstorage/src/index.ts",
+        "tsConfig": "services/localstorage/tsconfig.lib.json",
+        "assets": ["services/localstorage/*.md"]
       }
     }
   }

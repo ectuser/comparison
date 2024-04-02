@@ -15,14 +15,14 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@product-comparison/api": ["libs/api/src/index.ts"],
       "@product-comparison/comparison-state": [
         "libs/comparison-state/src/index.ts"
       ],
       "@product-comparison/container": ["libs/container/src/index.ts"],
       "@product-comparison/event-bus": ["libs/event-bus/src/index.ts"],
       "@product-comparison/history-state": ["libs/history-state/src/index.ts"],
-      "@product-comparison/localstorage": ["libs/localstorage/src/index.ts"],
+      "@product-comparison/http-api": ["services/http-api/src/index.ts"],
+      "@product-comparison/localstorage": ["services/localstorage/src/index.ts"],
       "@product-comparison/product-core": ["libs/product-core/src/index.ts"],
       "@product-comparison/product-history": [
         "libs/product-history/src/index.ts"

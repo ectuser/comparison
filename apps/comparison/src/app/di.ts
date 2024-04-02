@@ -1,6 +1,5 @@
 import { InjectionToken, inject } from '@angular/core';
-import { ProductRepository } from '@product-comparison/api';
-import { ProductInteractor } from '@product-comparison/product-core';
+import { ProductInteractor, ProductRepository } from '@product-comparison/product-core';
 import { ProductRepositoryPlugin } from '@product-comparison/product-core';
 import { ProductHistoryInteractor, ProductHistoryRepository, ProductHistoryLocalstorageRepository } from '@product-comparison/product-history';
 

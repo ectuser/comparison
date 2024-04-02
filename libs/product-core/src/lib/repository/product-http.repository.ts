@@ -1,4 +1,4 @@
-import { ApiEtf, ApiFund, getProduct } from '@product-comparison/api';
+import { ApiEtf, ApiFund, getProduct } from '@product-comparison/http-api';
 
 import { ProductRepositoryPlugin } from '../domain/plugin';
 import { EtfProduct, FundProduct, Product } from '../domain/product.model';
