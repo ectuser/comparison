@@ -2,8 +2,9 @@ import { HistoryState } from '@product-comparison/history-state';
 import { ProductHistoryInteractor, ProductHistoryLocalstorageRepository } from '@product-comparison/product-history';
 import { useEffect, useState } from 'react';
 import { productState } from './app';
+import { LocalStorage } from '@product-comparison/localstorage';
 
-const historyRepo = new ProductHistoryLocalstorageRepository();
+const historyRepo = new ProductHistoryLocalstorageRepository(new LocalStorage());
 const historyInteractor = new ProductHistoryInteractor(historyRepo);
 
 const historyState = new HistoryState(historyInteractor);
