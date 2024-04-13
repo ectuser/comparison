@@ -5,12 +5,8 @@ export class ProductHistoryInteractor {
     private productSearchRepository: ProductHistoryRepository
   ) {}
 
-  async getProductsSearchHistoryUnique(): Promise<string[]> {
-    return this.productSearchRepository.getUniqueHistoryReversed();
-  }
-
-  async getProductsSearchHistory(): Promise<string[]> {
-    return this.productSearchRepository.getHistory();
+  async getProductsSearchHistoryUnique(query?: string): Promise<string[]> {
+    return this.productSearchRepository.getHistory({reversed: true, unique: true, query});
   }
 
   async addProductSearchHistory(query: string): Promise<void> {

@@ -1,4 +1,6 @@
 import { InjectionToken, inject } from '@angular/core';
+
+import { LocalStorage } from '@product-comparison/localstorage';
 import { ProductInteractor, ProductRepository } from '@product-comparison/product-core';
 import { ProductRepositoryPlugin } from '@product-comparison/product-core';
 import { ProductHistoryInteractor, ProductHistoryRepository, ProductHistoryLocalstorageRepository } from '@product-comparison/product-history';
@@ -22,7 +24,7 @@ export const PRODUCT_INTERACTOR = new InjectionToken<ProductInteractor>('product
 export const HISTORY_REPOSITORY = new InjectionToken<ProductHistoryRepository>('history-repository', {
   providedIn: 'root',
   factory() {
-    return new ProductHistoryLocalstorageRepository();
+    return new ProductHistoryLocalstorageRepository(new LocalStorage());
   }
 })
 

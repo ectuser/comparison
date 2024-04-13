@@ -14,6 +14,12 @@ export class HistoryState {
     return this.history.asObservable();
   }
 
+  async setQuery(query: string): Promise<void> {
+    const data = await this.historyInteractor.getProductsSearchHistoryUnique(query);
+
+    this.history.next(data);
+  }
+
   async addHistory(query: string): Promise<void> {
     await this.historyInteractor.addProductSearchHistory(query);
 

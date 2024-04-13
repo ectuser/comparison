@@ -1,22 +1,43 @@
 import { LocalStorage } from '@product-comparison/localstorage';
 
-import { ProductHistoryRepository } from '../domain/plugin';
+import { HistorySearchOptions, ProductHistoryRepository } from '../domain/plugin';
+
+const defaultSearchOptions: HistorySearchOptions = {
+  reversed: false,
+  unique: false,
+};
 
 export class ProductHistoryLocalstorageRepository implements ProductHistoryRepository {
   private readonly localStorageKey = 'history';
 
-  private readonly ls = new LocalStorage();
+  constructor(
+    private ls: LocalStorage,
+  ) {}
 
-  async getHistory(): Promise<string[]> {
-    const result = this.ls.getItem<string[]>(this.localStorageKey, {parse: true});
+  async getHistory(_options?: Partial<HistorySearchOptions>): Promise<string[]> {
+    const options = {...defaultSearchOptions, ..._options};
+    let result = this.ls.getItem<string[]>(this.localStorageKey, {parse: true});
 
-    if (Array.isArray(result) && result.every(item => typeof item === 'string')) {
-      return result;
+    if (!Array.isArray(result) || !result.every(item => typeof item === 'string')) {
+      this.ls.removeItem(this.localStorageKey);
+
+      return [];
     }
 
-    this.ls.removeItem(this.localStorageKey);
+    if (options.query) {
+      result = result.filter(r => r.includes(options.query as string));
+    }
 
-    return [];
+    if (options.reversed) {
+      // mutates arr
+      result = result.reverse();
+    }
+
+    if (options.unique) {
+      result = Array.from(new Set(result));
+    }
+
+    return result;
   }
   async addHistory(query: string): Promise<void> {
     const history = this.ls.getItem<string[]>(this.localStorageKey, {parse: true}) ?? [];
@@ -25,7 +46,7 @@ export class ProductHistoryLocalstorageRepository implements ProductHistoryRepos
   }
 
   async getUniqueHistoryReversed(): Promise<string[]> {
-    const history = (await this.getHistory()).reverse();
+    const history = (await this.getHistory({unique: true, reversed: true}));
 
     return Array.from(new Set(history));
   }

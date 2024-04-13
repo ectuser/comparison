@@ -18,11 +18,13 @@ export class ComparisonState {
   }
 
   async setProducts(isins: number[]) {
+    const noDuplicateIsins = Array.from(new Set(isins));
+
     this.loading.next(true);
 
     try {
-      const requests = isins.map(isin => {
-        const existingProduct = this.products.value.find(p => p.isin === isin);
+      const requests = noDuplicateIsins.map(isin => {
+      const existingProduct = this.products.value.find(p => p.isin === isin);
 
         if (existingProduct) {
           return Promise.resolve(existingProduct)

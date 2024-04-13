@@ -8,14 +8,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { HistoryState } from '@product-comparison/history-state';
 import { ComparisonState } from '@product-comparison/comparison-state';
 
+import { filter, switchMap } from 'rxjs';
+
 import { HISTORY_STATE, PRODUCT_STATE } from '../app.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-search',
@@ -80,6 +82,14 @@ export class SearchComponent {
         this.form.controls.search.enable();
       }
     });
+
+    this.form.controls.search.valueChanges.pipe(
+      filter((val) => val !== null),
+      switchMap((value) => {
+        return this.historyState.setQuery(value as string);
+      }),
+      takeUntilDestroyed()
+    ).subscribe();
   }
 
   async search() {
