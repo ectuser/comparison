@@ -38,7 +38,7 @@ export const HISTORY_STATE = new InjectionToken<HistoryState>('history-state');
   providers: [
     {
       provide: PRODUCT_STATE, useFactory(store: Store, productInteractor: ProductInteractor) {
-        // return new AgnosticComparisonState(productInteractor);
+        return new AgnosticComparisonState(productInteractor);
         return new SignalComparisonState(store);
       }, deps: [Store, PRODUCT_INTERACTOR],
     },
