@@ -51,7 +51,7 @@ import { HISTORY_STATE, PRODUCT_STATE } from '../app.component';
       </mat-form-field>
 
       <div>
-        <button mat-flat-button color="primary" type="submit">Search</button>
+        <button mat-flat-button color="primary" type="submit" [disabled]="loading$ | async">Search</button>
       </div>
     </form>
   `,

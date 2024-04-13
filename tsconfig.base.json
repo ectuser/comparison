@@ -28,7 +28,8 @@
       "@product-comparison/product-core": ["libs/product-core/src/index.ts"],
       "@product-comparison/product-history": [
         "libs/product-history/src/index.ts"
-      ]
+      ],
+      "@product-comparison/utils": ["services/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

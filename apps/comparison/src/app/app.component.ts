@@ -7,16 +7,19 @@ import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
-import { ComparisonState } from '@product-comparison/comparison-state';
+import { AgnosticComparisonState, ComparisonState } from '@product-comparison/comparison-state';
 import { Product, ProductInteractor } from '@product-comparison/product-core';
 import { HistoryState } from '@product-comparison/history-state';
+import { ProductHistoryInteractor } from '@product-comparison/product-history';
+
+import { Store } from '@ngrx/store';
+import { skip, switchMap } from 'rxjs';
 
 import { HISTORY_INTERACTOR, PRODUCT_INTERACTOR } from './di';
-import { skip, switchMap } from 'rxjs';
-import { ProductHistoryInteractor } from '@product-comparison/product-history';
 import { SearchComponent } from './search/search.component';
-import { MatButtonModule } from '@angular/material/button';
+import { SignalComparisonState } from './comparison.store';
 
 export const PRODUCT_STATE = new InjectionToken<ComparisonState>('product-state');
 export const HISTORY_STATE = new InjectionToken<HistoryState>('history-state');
@@ -34,15 +37,16 @@ export const HISTORY_STATE = new InjectionToken<HistoryState>('history-state');
   ],
   providers: [
     {
-      provide: PRODUCT_STATE, useFactory(productInteractor: ProductInteractor) {
-        return new ComparisonState(productInteractor);
-      }, deps: [PRODUCT_INTERACTOR],
+      provide: PRODUCT_STATE, useFactory(store: Store, productInteractor: ProductInteractor) {
+        // return new AgnosticComparisonState(productInteractor);
+        return new SignalComparisonState(store);
+      }, deps: [Store, PRODUCT_INTERACTOR],
     },
     {
       provide: HISTORY_STATE, useFactory(historyInteractor: ProductHistoryInteractor) {
         return new HistoryState(historyInteractor);
       }, deps: [HISTORY_INTERACTOR]
-    }
+    },
   ],
   selector: 'app-root',
   templateUrl: './app.component.html',
