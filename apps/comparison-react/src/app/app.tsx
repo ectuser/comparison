@@ -1,11 +1,11 @@
-import { ComparisonState } from '@product-comparison/comparison-state';
+import { AgnosticComparisonState } from '@product-comparison/comparison-state';
 import { Search } from './search';
 import { ProductInteractor, ProductRepository } from '@product-comparison/product-core';
 import { Comparison } from './comparison';
 
 export const productRepo = new ProductRepository();
 export const productInteractor = new ProductInteractor(productRepo)
-export const productState = new ComparisonState(productInteractor);
+export const productState = new AgnosticComparisonState(productInteractor);
 
 export function App() {
   return (
