@@ -50,7 +50,7 @@ import { HISTORY_STATE, PRODUCT_STATE } from '../app.component';
         </mat-autocomplete>
       </mat-form-field>
 
-      <div>
+      <div class="button-container">
         <button mat-flat-button color="primary" type="submit" [disabled]="loading$ | async">Search</button>
       </div>
     </form>
@@ -58,6 +58,21 @@ import { HISTORY_STATE, PRODUCT_STATE } from '../app.component';
   styles: `
     :host {
       display: block;
+    }
+
+    form {
+      width: 50%;
+      margin: 0 auto;
+    }
+
+    mat-form-field {
+      width: 100%;
+    }
+
+    .button-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

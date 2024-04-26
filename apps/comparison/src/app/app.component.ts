@@ -8,6 +8,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AgnosticComparisonState, ComparisonState } from '@product-comparison/comparison-state';
 import { Product, ProductInteractor } from '@product-comparison/product-core';
@@ -19,7 +20,7 @@ import { skip, switchMap } from 'rxjs';
 
 import { HISTORY_INTERACTOR, PRODUCT_INTERACTOR } from './di';
 import { SearchComponent } from './search/search.component';
-import { SignalComparisonState } from './comparison.store';
+import { NgrxComparisonState } from './comparison.store';
 
 export const PRODUCT_STATE = new InjectionToken<ComparisonState>('product-state');
 export const HISTORY_STATE = new InjectionToken<HistoryState>('history-state');
@@ -34,12 +35,13 @@ export const HISTORY_STATE = new InjectionToken<HistoryState>('history-state');
     MatIconModule,
     RouterModule,
     SearchComponent,
+    MatProgressSpinnerModule,
   ],
   providers: [
     {
       provide: PRODUCT_STATE, useFactory(store: Store, productInteractor: ProductInteractor) {
         return new AgnosticComparisonState(productInteractor);
-        return new SignalComparisonState(store);
+        return new NgrxComparisonState(store);
       }, deps: [Store, PRODUCT_INTERACTOR],
     },
     {
@@ -56,6 +58,7 @@ export const HISTORY_STATE = new InjectionToken<HistoryState>('history-state');
 export class AppComponent {
   readonly products: Signal<Product[]>;
   readonly columns: Signal<string[]>;
+  readonly loading: Signal<boolean>;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -68,6 +71,7 @@ export class AppComponent {
 
     this.products = toSignal(products$, {initialValue: []});
     this.columns = computed(() => this.products()?.map(p => p.isin.toString()));
+    this.loading = toSignal(this.comparisonState.getIsLoading(), {initialValue: false});
 
     products$.pipe(
       skip(1),

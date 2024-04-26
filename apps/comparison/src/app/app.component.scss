@@ -3,6 +3,10 @@
   padding: 20px;
 }
 
+h1 {
+  text-align: center;
+}
+
 table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
@@ -37,11 +41,20 @@ td {
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  cursor: move;
   background: white;
   font-size: 14px;
   flex-grow: 1;
   flex-basis: 0;
+
+  &.drag {
+    cursor: move;
+  }
+}
+
+.spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cdk-drag-preview {

@@ -1,4 +1,4 @@
-<h1>Comparison</h1>
+<h1 class="mat-headline-2">Comparison</h1>
 
 <app-search />
 
@@ -7,8 +7,10 @@
 
 @if (products().length) {
   <div cdkDropList cdkDropListOrientation="horizontal" class="example-list" style="width: 100%;" (cdkDropListDropped)="drop($event)">
+    <div class="example-box">
+    </div>
     @for (item of products(); track 'isin') {
-      <div class="example-box" cdkDrag>
+      <div class="example-box drag" cdkDrag>
         {{item.name}}
 
         <button mat-icon-button color="primary" (click)="removeProduct(item.isin)">
@@ -22,33 +24,43 @@
 <br>
 <br>
 
-@if (products(); as products) {
-  <table style="width: 100%;">
+@if (loading()) {
+  <div class="spinner-container">
+    <mat-spinner></mat-spinner>
+  </div>
+} @else {
+  @if (products(); as products) {
+    <table style="width: 100%;">
 
-    <thead>
-      @for (item of products; track 'isin') {
-        <th style="padding: 20px;">{{item.name}}</th>
-      }
-    </thead>
-
-    <tbody>
-      <tr>
+      <thead>
+        <th></th>
         @for (item of products; track 'isin') {
-          <td>{{item.name}}</td>
+          <th style="padding: 20px;">{{item.name}}</th>
         }
-      </tr>
+      </thead>
 
-      <tr>
-        @for (item of products; track 'isin') {
-          <td>{{item.isin}}</td>
-        }
-      </tr>
+      <tbody>
+        <tr>
+          <td>Name</td>
+          @for (item of products; track 'isin') {
+            <td>{{item.name}}</td>
+          }
+        </tr>
 
-      <tr>
-        @for (item of products; track 'isin') {
-          <td>{{item.cap > 50 ? 'Yes' : 'No'}}</td>
-        }
-      </tr>
-    </tbody>
-  </table>
+        <tr>
+          <td>ISIN</td>
+          @for (item of products; track 'isin') {
+            <td>{{item.isin}}</td>
+          }
+        </tr>
+
+        <tr>
+          <td>Capitalization > EUR 50 Mrd</td>
+          @for (item of products; track 'isin') {
+            <td>{{item.cap > 50 ? 'Yes' : 'No'}}</td>
+          }
+        </tr>
+      </tbody>
+    </table>
+  }
 }

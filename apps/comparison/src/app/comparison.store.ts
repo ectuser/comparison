@@ -61,7 +61,7 @@ const selectLoading = createSelector(
   state => state.loading
 );
 
-export class SignalComparisonState implements ComparisonState {
+export class NgrxComparisonState implements ComparisonState {
   constructor(
     private store: Store,
   ) {}

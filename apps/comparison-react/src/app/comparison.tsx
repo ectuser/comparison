@@ -1,6 +1,7 @@
 import { Product } from '@product-comparison/product-core';
 import { useEffect, useState } from 'react';
 import { productState } from './app';
+import { IconButton } from './icon-button';
 
 export function Comparison() {
   const {products, productRemoved, reorder} = useProducts();
@@ -61,12 +62,12 @@ function ProductCard({
   return <div className='rounded-md border border-gray-300 flex-1 p-2 text-center'>
     <div className='flex justify-between align-center'>
       <span>{product.name}</span>
-      <button className='py-1 px-2 border rounded' onClick={() => productRemoved(product.isin)}>X</button>
+      <IconButton onClick={() => productRemoved(product.isin)}>X</IconButton>
     </div>
 
     <div className='flex gap-2 justify-center pt-5'>
-      <button className='py-1 px-2 rounded-md border border-blue-300' onClick={productReorderedLeft}>{'<'}</button>
-      <button className='py-1 px-2 rounded-md border border-blue-300' onClick={productReorderedRight}>{'>'}</button>
+      <IconButton onClick={productReorderedLeft}>{'<'}</IconButton>
+      <IconButton onClick={productReorderedRight}>{'>'}</IconButton>
     </div>
   </div>;
 }
